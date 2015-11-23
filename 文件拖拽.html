@@ -1,0 +1,61 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>练习</title>
+<style>
+*{margin:0;padding:0;}
+.box{width:600px;height:600px;border:1px solid #000;margin:0 auto;}
+.fildBox{width:300px;height:200px;border:1px solid #ccc;margin:200px auto;text-align:center;line-height:200px;display:none;}
+.box span{width:200px;height:30px;}
+.box em{width:200px;height:30px;}
+</style>
+
+<script>
+window.onload=function(){
+	var oBox=document.querySelector('.box');
+	var oFildBox=document.querySelector('.fildBox');
+	var oS=document.querySelector('.box span');
+	var oE=document.querySelector('.box em');
+	var timer=null
+	oFildBox.ondragenter=function(){
+		oFildBox.innerHTML='请释放鼠标';		
+	};
+	oFildBox.ondragleave=function(){
+		oFildBox.innerHTML='请将文件拖拽到此处……';
+	};
+	oFildBox.ondragover=function(){
+		return false;
+	};
+	oFildBox.ondrop=function(ev){
+		var oFile=ev.dataTransfer.files[0];
+		var reader=new FileReader;
+		reader.readAsDataURL(oFile);
+		reader.onload=function(){
+			alert('读取成功')
+		};
+		reader.onprogress=function(ev){
+			oE.innerHTML=ev.loaded*100/ev.total.toFixed(2)+'%';
+		};
+		oS.innerHTML=oFile.name+'('+(oFile.size/1024).toFixed(2)+'k)';
+		return false;
+	};
+	oBox.ondragover=function(){
+		oFildBox.style.display='block';
+		clearTimeout(timer);
+		timer=setTimeout(function(){			
+			oFildBox.style.display='none';
+		},300)
+	};
+};
+</script>
+</head>
+
+<body>
+<div class="box">
+	<div class="fildBox">请将文件拖拽到此处……</div>
+    <span></span>
+    <em></em>
+</div>
+</body>
+</html>
